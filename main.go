@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"apiserver/config"
+	"apiserver/model"
 	"apiserver/router"
 
 	"github.com/gin-gonic/gin"
@@ -24,6 +25,9 @@ func main() {
 	if err := config.Init(*cfg); err != nil {
 		panic(err)
 	}
+
+	model.DB.Init()
+	defer model.DB.Close()
 
 	gin.SetMode(viper.GetString("runmode"))
 
