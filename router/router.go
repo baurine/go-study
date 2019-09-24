@@ -3,6 +3,9 @@ package router
 import (
 	"net/http"
 
+	"apiserver/handler/sd"
+	"apiserver/router/middleware"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -10,14 +13,20 @@ import (
 func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
 	// middlewares
 	g.Use(gin.Recovery())
-
+	g.Use(middleware.NoCache)
+	g.Use(middleware.Options)
+	g.Use(middleware.Secure)
 	g.Use(mw...)
 
 	g.NoRoute(func(c *gin.Context) {
 		c.String(http.StatusNotFound, "The incorrect API route")
 	})
 
-	// svcd := g.Group("/sd")
+	svcd := g.Group("/sd")
+	{
+		svcd.GET("/health", sd.HealthCheck)
+		svcd.GET("/disk", sd.DiskCheck)
+	}
 
 	return g
 }
