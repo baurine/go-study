@@ -8,6 +8,7 @@ import (
 	"apiserver/config"
 	"apiserver/model"
 	"apiserver/router"
+	"apiserver/router/middleware"
 
 	"github.com/gin-gonic/gin"
 	"github.com/lexkong/log"
@@ -33,9 +34,7 @@ func main() {
 
 	g := gin.New()
 
-	middlewares := []gin.HandlerFunc{}
-
-	router.Load(g, middlewares...)
+	router.Load(g, middleware.RequestId(), middleware.Logging())
 
 	go func() {
 		if err := pingServer(); err != nil {
