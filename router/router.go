@@ -7,11 +7,15 @@ import (
 	"apiserver/handler/user"
 	"apiserver/router/middleware"
 
+	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 )
 
 // Load loads, middlewares, routes, handlers
 func Load(g *gin.Engine, mw ...gin.HandlerFunc) *gin.Engine {
+	// pprof
+	pprof.Register(g)
+
 	// middlewares
 	g.Use(gin.Recovery())
 	g.Use(middleware.NoCache)
