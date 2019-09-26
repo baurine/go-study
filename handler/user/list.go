@@ -6,9 +6,11 @@ import (
 	"apiserver/service"
 
 	"github.com/gin-gonic/gin"
+	"github.com/lexkong/log"
 )
 
 func List(c *gin.Context) {
+	log.Debug("List function is called.")
 	var r ListRequest
 	if err := c.Bind(&r); err != nil {
 		SendResponse(c, errno.ErrBind, nil)

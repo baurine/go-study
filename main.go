@@ -64,18 +64,18 @@ func main() {
 	key := viper.GetString("tls.key")
 	if cert != "" && key != "" {
 		go func() {
-			log.Infof("Start to listening the incoming requests on https address: %s", viper.GetString("tls.addr"))
+			log.Infof("Start to listening the incoming requests on https address: %s", viper.GetString("tls.port"))
 			log.Info(http.ListenAndServeTLS(viper.GetString("tls.addr"), cert, key, g).Error())
 		}()
 	}
 
-	log.Infof("Start to listening the incoming requests on http address: %s", viper.GetString("addr"))
-	log.Info(http.ListenAndServe(viper.GetString("addr"), g).Error())
+	log.Infof("Start to listening the incoming requests on http address: %s", viper.GetString("port"))
+	log.Info(http.ListenAndServe(viper.GetString("port"), g).Error())
 }
 
 func pingServer() error {
 	for i := 0; i < viper.GetInt("max_ping_count"); i++ {
-		resp, err := http.Get(viper.GetString("url") + "/sd/health")
+		resp, err := http.Get("http://127.0.0.1" + viper.GetString("port") + "/sd/health")
 		if err == nil && resp.StatusCode == 200 {
 			return nil
 		}
