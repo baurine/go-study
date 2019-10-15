@@ -5,7 +5,55 @@
 
 ## Go Modules
 
-go 官方依赖管理。`go mod init`，生成 go.mod 文件。
+- [Go Modules 详解使用](https://learnku.com/articles/27401)
+- [用 go-module 作为包管理器搭建 go 的 web 服务器](https://www.hulunhao.com/go/go-web-backend-starter/)
+
+go 官方依赖管理。`go mod init module_name`，生成 go.mod 文件，执行 `go build` 会生成 go.sum，go.mod 相当于 npm 中的 package.json，go.sum 相当于 package-lock.json。
+
+示例：
+
+1. 在 GOPATH 以外的路径下，`mkdir backend && cd backend`
+1. 执行 `go mod init backend` 初始化，生成 go.mod，其内容如下
+
+   ```
+   module backend
+
+   go 1.12
+   ```
+
+1. 创建 main.go，import gin 包
+
+   ```go
+   package main
+
+   import "github.com/gin-gonic/gin"
+
+   func main() {
+       r := gin.Default()
+       ...
+   }
+   ```
+
+1. 执行 `go build`，自动下载依赖包，go.mod 被自动更新并生成 go.sum
+
+   ```
+   // go.mod
+   module backend
+
+   go 1.12
+
+   require(
+       github.com/gin-contrib/sse v0.0.0-20190301062529-5545eab6dad3 // indirect
+       github.com/gin-gonic/gin v1.3.0
+       ...
+   )
+   ```
+
+1. 查看依赖：`go list -m all`
+
+1. 清除过期依赖：`go mod tidy`
+
+1. 更多命令略
 
 ## Web 框架
 
