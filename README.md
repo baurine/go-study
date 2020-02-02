@@ -1,5 +1,7 @@
 # Go Study
 
+Some notes and code for learning Go.
+
 Notes:
 
 - [Go Basic - Note 1](./notes/go-basic-note-1.md)

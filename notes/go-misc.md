@@ -2,6 +2,7 @@
 
 - Go Modules
 - Web 框架
+- Go 中的字符串
 
 ## Go Modules
 
@@ -115,3 +116,22 @@ iris 也差不多。
 web 框架原理都差不多，详略，需要时再看文档。
 
 orm 库可以用 gorm 包。
+
+## Go 中的字符串
+
+- [Strings, bytes, runes and characters in Go](https://blog.golang.org/strings) | [Go 语言中的字符串](https://www.jianshu.com/p/01a842787637)
+- [strings — 字符串操作](https://books.studygolang.com/The-Golang-Standard-Library-by-Example/chapter02/02.1.html)
+
+总结一下就是 Go 中的字符串和 Rust 中的字符串一样，存储的是 utf-8 编码的字节码。Go 中的字符串实际就是一个 byte 切片，即 `[]byte`，这和 Rust 中字符串实际是 `Vec<u8>` 类似。
+
+但对于单个字符类型，Go 和字符串一样仍然用 utf-8 编码，单个字符其实为 rune 类型；而 Rust 使用 unicode 编码存放。
+
+对 Go 的字符串如何进行一个字符一个字符的遍历，使用 for...range，相当于 Rust 中的 chars() 方法。
+
+对字符串使用 len() 方法得到的是字节个数，而不是字符个数。
+
+如何得到真正的字符个数，使用 strings.Count() 方法，比如：
+
+```go
+fmt.Println(strings.Count("谷歌中国", "")) // 5，为实际值+1
+```
