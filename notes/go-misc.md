@@ -135,3 +135,21 @@ orm 库可以用 gorm 包。
 ```go
 fmt.Println(strings.Count("谷歌中国", "")) // 5，为实际值+1
 ```
+
+## 变量分配在栈还是堆
+
+c/c++ 中，用 malloc/new 在堆上分配空间，其余在栈上分配。Go 不太一样，new 的对象也有可能在栈上分配，而不是 new 的对象有可能在堆上分配，由 Go 编译器决定，它会进行逃逸分析，简单地说就是如果变量仅在函数内作用，不会被引用到函数外，那么就在栈上分配，不管是 new 还不是 new 出来的，反之，则在堆上分配。
+
+所以 Go 让你完全不用再考虑栈还是堆的问题...
+
+## Go 和模板
+
+- [Go 模板引擎](https://www.tizi365.com/archives/85.html)
+
+wip
+
+## Go Context
+
+- [6.1 上下文 Context](https://draveness.me/golang/docs/part3-runtime/ch06-concurrency/golang-context/)
+
+wip
