@@ -6,10 +6,10 @@
 
 ```go
 import (
-  "database/sql"
+	"database/sql"
 
-  "github.com/pingcap/log"
-  "go.uber.org/zap"
+	"github.com/pingcap/log"
+	"go.uber.org/zap"
 
 	_ "github.com/go-sql-driver/mysql"
 )

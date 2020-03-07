@@ -56,67 +56,6 @@ go 官方依赖管理。`go mod init module_name`，生成 go.mod 文件，执�
 
 1. 更多命令略
 
-## Web 框架
-
-资源：
-
-- [7 天用 Go 从零实现 Web 框架 Gee 教程](https://github.com/geektutu/7days-golang)
-- [Go-Mega Tutorial Go web](https://github.com/bonfy/go-mega)
-- [gin offical doc](https://github.com/gin-gonic/gin)
-- [gin full doc](https://www.jianshu.com/p/98965b3ff638)
-- [Go Gin 简明教程](https://geektutu.com/post/quick-go-gin.html)
-- [gin 教程](https://youngxhui.top/categories/gin/)
-- [Golang 微框架 Gin 简介](https://www.jianshu.com/p/a31e4ee25305)
-- [go iris](https://wxnacy.com/2019/03/01/go-iris-simple/)
-
-主要是这两个框架：gin / iris
-
-略微看了一下文档，路由基本是这么配置的：
-
-gin 的例子：
-
-```go
-func main() {
-    router := gin.Default()
-
-    // 此规则能够匹配/user/john这种格式，但不能匹配/user/ 或 /user这种格式
-    router.GET("/user/:name", func(c *gin.Context) {
-        name := c.Param("name")
-        c.String(http.StatusOK, "Hello %s", name)
-    })
-
-    // 但是，这个规则既能匹配/user/john/格式也能匹配/user/john/send这种格式
-    // 如果没有其他路由器匹配/user/john，它将重定向到/user/john/
-    router.GET("/user/:name/*action", func(c *gin.Context) {
-        name := c.Param("name")
-        action := c.Param("action")
-        message := name + " is " + action
-        c.String(http.StatusOK, message)
-    })
-
-    router.POST("/form_post", func(c *gin.Context) {
-        message := c.PostForm("message")
-        nick := c.DefaultPostForm("nick", "anonymous") // 此方法可以设置默认值
-
-        c.JSON(200, gin.H{
-            "status":  "posted",
-            "message": message,
-            "nick":    nick,
-        })
-    })
-
-    router.Run(":8080")
-}
-```
-
-iris 也差不多。
-
-和 Node.js 的 express，Python 的 Flask 很像，不像 rails 那样是以 controller 为核心的 (Python 的 Djanjo 也是以 controller 为核心的吧?)
-
-web 框架原理都差不多，详略，需要时再看文档。
-
-orm 库可以用 gorm 包。
-
 ## Go 中的字符串
 
 - [Strings, bytes, runes and characters in Go](https://blog.golang.org/strings) | [Go 语言中的字符串](https://www.jianshu.com/p/01a842787637)
@@ -142,14 +81,41 @@ c/c++ 中，用 malloc/new 在堆上分配空间，其余在栈上分配。Go �
 
 所以 Go 让你完全不用再考虑栈还是堆的问题...
 
-## Go 和模板
-
-- [Go 模板引擎](https://www.tizi365.com/archives/85.html)
-
-wip
-
 ## Go Context
 
 - [6.1 上下文 Context](https://draveness.me/golang/docs/part3-runtime/ch06-concurrency/golang-context/)
 
 wip
+
+## Go 时间解析
+
+Go 的时间解析有点奇芭，和其它语言很不一样。它不使用 "YYYY-MM-DD HH:mm:ss" 这样的模板，而是使用了一个特定时间作为模板 (layout)，即 2006 年 1 月 2 日，下午 3 时 4 分 5 秒。比如：
+
+```go
+fmt.Println(time.Unix(1389058332, 0).Format("2006-01-02 15:04:05")) //2014-01-07 09:32:12
+
+dateStr := "2016-07-14 14:24:51"
+timestamp1, _ := time.Parse("2006-01-02 15:04:05", dateStr)
+timestamp2, _ := time.ParseInLocation("2006-01-02 15:04:05", dateStr, time.Local)
+fmt.Println(timestamp1, timestamp2)               //2016-07-14 14:24:51 +0000 UTC 2016-07-14 14:24:51 +0800 CST
+fmt.Println(timestamp1.Unix(), timestamp2.Unix()) //1468506291 1468477491
+
+p := fmt.Println
+t := time.Now()
+p(t.Format("2006-01-02T15:04:05Z07:00"))
+p(t.Format("3:04PM"))
+p(t.Format("Mon Jan _2 15:04:05 2006"))
+p(t.Format("2006-01-02T15:04:05.999999-07:00"))
+```
+
+将在 url 作为查询参数的时间戳转换成人类易读的时间格式：
+
+```go
+startTimeStr := c.Query("start_time")
+tsSec, err := strconv.ParseInt(startTimeStr, 10, 64)
+if err != nil {
+  _ = c.Error(err)
+  return
+}
+startTime := time.Unix(tsSec, 0)
+```
