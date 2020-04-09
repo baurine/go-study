@@ -198,3 +198,34 @@ func GinLoad(r *gin.Engine) {
 ```
 
 后来了解到这样改的原因是为了分发 Go，Go 的一大优势就是可以把所有代码最终只编译成一个执行文件，如果用 .html 这种方式，这些文件默认是没法打包到执行文件里的。
+
+解决办法，参考这三个 PR：
+
+- https://github.com/pingcap-incubator/tidb-dashboard/pull/331
+- https://github.com/pingcap-incubator/tidb-dashboard/pull/307
+- https://github.com/pingcap-incubator/tidb-dashboard/pull/171
+
+[Choosing A Library to Embed Static Assets in Go](https://tech.townsourced.com/post/embedding-static-files-in-go/)
+
+思路是在 debug 模式下从文件中加载静态文件，在 release 模式下从 bundle 到 go 代码中的 assets 中加载静态文件。
+
+http.Dir(), http.FileServer()
+
+涉及到的新的知识点：
+
+- Go 的条件编译
+
+  ```go
+  // a.go
+  // +build dev
+
+  // b.go
+  // +build !dev
+  ```
+
+- go generate
+
+  ```go
+  // a.go
+  //go:generate vfsgendev -source="github.com/pingcap-incubator/tidb-dashboard/pkg/apiserver/diagnose".Vfs
+  ```
