@@ -229,3 +229,43 @@ http.Dir(), http.FileServer()
   // a.go
   //go:generate vfsgendev -source="github.com/pingcap-incubator/tidb-dashboard/pkg/apiserver/diagnose".Vfs
   ```
+
+## 解析查询参数
+
+如果查询参数是放在 url 中，比如 `/api/statements?schema_name=xxx&digest=xxx`，可以用 ShouldBindQuery(&req)，示例：
+
+```go
+type GetPlansRequest struct {
+	SchemaName string `json:"schema_name" form:"schema_name"`
+	Digest     string `json:"digest" form:"digest"`
+	BeginTime  int    `json:"begin_time" form:"begin_time"`
+	EndTime    int    `json:"end_time" form:"end_time"`
+}
+
+func (s *Service) getPlansHandler(c *gin.Context) {
+	var req GetPlansRequest
+	if err := c.ShouldBindQuery(&req); err != nil {
+		c.Status(http.StatusBadRequest)
+		_ = c.Error(utils.ErrInvalidRequest.WrapWithNoMessage(err))
+		return
+	}
+```
+
+如果是 post，可以用 ShouldBindJSON(&req)，示例：
+
+```go
+type GenerateReportRequest struct {
+	StartTime        int64 `json:"start_time"`
+	EndTime          int64 `json:"end_time"`
+	CompareStartTime int64 `json:"compare_start_time"`
+	CompareEndTime   int64 `json:"compare_end_time"`
+}
+
+func (s *Service) genReportHandler(c *gin.Context) {
+	var req GenerateReportRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.Status(http.StatusBadRequest)
+		_ = c.Error(apiutils.ErrInvalidRequest.WrapWithNoMessage(err))
+		return
+	}
+```
