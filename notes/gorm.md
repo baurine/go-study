@@ -184,3 +184,31 @@ func QueryStatementNodes(db *gorm.DB, schema, beginTime, endTime, digest string)
 ```
 
 如果只查询单行记录，则用 `.Scan(&rusult).Error` 或 `.First(&result).Error` 替代 `.Find(&result).Error`。
+
+## gorm 查询 MySQL 系统变量
+
+<https://github.com/jinzhu/gorm/issues/2616>
+
+方法 1：
+
+```go
+type sqlVariables struct {
+    SQLMode string `gorm:"column:SQLMode"`
+}
+var variables sqlVariables
+err := db.Raw("select @@sql_mode as SQLMode").Scan(&variables).Error
+if err != nil {
+   //todo
+}
+```
+
+方法 2：
+
+```go
+var values []string
+err := db.Raw("select @@global.sql_mode as value").Pluck("value", &values).Error
+if err != nil {
+   //todo
+}
+fmt.Println("SQLMode:" + variables[0])
+```
