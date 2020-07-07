@@ -119,3 +119,9 @@ if err != nil {
 }
 startTime := time.Unix(tsSec, 0)
 ```
+
+## Go 文件操作
+
+- [Go 文件操作大全 (译)](https://colobu.com/2016/10/12/go-file-operations/)
+
+主要涉及 os | io | io/ioutil | bufio 包。
