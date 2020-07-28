@@ -125,3 +125,23 @@ startTime := time.Unix(tsSec, 0)
 - [Go 文件操作大全 (译)](https://colobu.com/2016/10/12/go-file-operations/)
 
 主要涉及 os | io | io/ioutil | bufio 包。
+
+## Host 在 HTTP Request Header 中的作用
+
+(其实这个内容与 Go 无关，是属于基本的网络知识)
+
+Related:
+
+- https://github.com/pingcap/telemetry-log-collector/pull/1
+- https://github.com/yeqown/fasthttp-reverse-proxy/pull/11
+- [HTTP 协议 Host 请求头的作用](https://blog.csdn.net/codejas/article/details/82844032)
+
+> Host 是 HTTP 1.1 协议中新增的一个请求头，主要用来实现虚拟主机技术。
+
+> 虚拟主机（virtual hosting）即共享主机（shared web hosting），可以利用虚拟技术把一台完整的服务器分成若干个主机，因此可以在单一主机上运行多个网站或服务。
+
+> 举个栗子，有一台 ip 地址为 61.135.169.125 的服务器，在这台服务器上部署着谷歌、百度、淘宝的网站。为什么我们访问 https://www.google.com 时，看到的是 Google 的首页而不是百度或者淘宝的首页？原因就是 Host 请求头决定着访问哪个虚拟主机。
+
+(又有点疑惑了，对于 fasthttp-reverse-proxy，不设置 host 也能工作呢...有待进一步研究)
+
+TODO: add code example
