@@ -145,3 +145,66 @@ Related:
 (又有点疑惑了，对于 fasthttp-reverse-proxy，不设置 host 也能工作呢...有待进一步研究)
 
 TODO: add code example
+
+## 类型判断
+
+- [Type assertions](https://tour.golang.org/methods/15)
+
+`t := i.(T)`
+
+```go
+func main() {
+	var i interface{} = "hello"
+
+	s := i.(string)
+	fmt.Println(s)
+
+	s, ok := i.(string)
+	fmt.Println(s, ok)
+
+	f, ok := i.(float64)
+	fmt.Println(f, ok)
+
+	f = i.(float64) // panic
+	fmt.Println(f)
+}
+```
+
+- [Type switches](https://tour.golang.org/methods/16)
+
+```go
+switch v := i.(type) {
+case T:
+    // here v has type T
+case S:
+    // here v has type S
+default:
+    // no match; here v has the same type as i
+}
+```
+
+示例：
+
+```go
+func do(i interface{}) {
+	switch v := i.(type) {
+	case int:
+		fmt.Printf("Twice %v is %v\n", v, v*2)
+	case string:
+		fmt.Printf("%q is %v bytes long\n", v, len(v))
+	default:
+		fmt.Printf("I don't know about type %T!\n", v)
+	}
+}
+
+func main() {
+	do(21)
+	do("hello")
+	do(true)
+}
+```
+
+## 反射
+
+- `reflect.TypeOf()`
+- `reflect.ValueOf()`
